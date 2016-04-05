@@ -1,7 +1,5 @@
 <?php
 session_start();
-require_once('classes/TwitterOAuth.php');
-require_once('classes/TwitterConfig.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,7 +24,9 @@ require_once('classes/TwitterConfig.php');
 		<h3>Hello, <?php echo $user->user_id; ?>!</h3>
 		<p>Your username is: <b><?php echo $user->username; ?></b> (<a href="logout.php">Click here</a> to logout)</p>
 		<p>This is your profile picture:</p>
-		<img src="<?php echo $user->avatar; ?>"/>
+		<img width="50px" height="50px" src="<?php echo $user->avatar; ?>"/>
+		<hr/>
+		<button onclick="location.href='postquestion.php'">ASK A QUESTION</button>
 		<?php
 	} 
 	?>

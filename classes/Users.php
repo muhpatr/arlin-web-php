@@ -1,4 +1,7 @@
 <?php
+if(!isset($_SESSION)) { 
+	session_start(); 
+}
 require_once "DBConnection.php";
 
 class Users {
@@ -36,6 +39,15 @@ class Users {
 	}
 	
 	public function registerUser($user_id, $username, $avatar) {
-		return ($this->checkExistedUser($user_id) > 0) ? $this->updateUser($user_id, $username, $avatar) : $this->insertUser($user_id, $username, $avatar);
+		if ($this->checkExistedUser($user_id) > 0) {
+			$response = $this->updateUser($user_id, $username, $avatar);
+		} else {
+			$response = $this->insertUser($user_id, $username, $avatar);
+		}
+		$user['user_id'] = $user_id;
+		$user['username'] = $username;
+		$user['avatar'] = $avatar;
+		$_SESSION['user_login'] = json_encode($user);
+		return $response;
 	}
 }

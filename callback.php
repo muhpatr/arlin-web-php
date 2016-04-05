@@ -29,17 +29,14 @@ unset($_SESSION['oauth_token']);
 unset($_SESSION['oauth_token_secret']);
 
 $content = $connection->get('account/verify_credentials');
-$user_profile = json_encode($content);
-$user_profile = json_decode($user_profile, TRUE);
-$user['user_id'] = $user_profile['id'];
-$user['username'] = $user_profile['screen_name'];
-$user['avatar'] = str_replace("_normal", "", $user_profile['profile_image_url']);
+$user = json_encode($content);
+$user = json_decode($user, TRUE);
 
 /* Insert to database */
 $users = new Users();
-$response = json_decode($users->registerUser($user['user_id'], $user['username'], $user['avatar']));
-if ($response->success == 1) {
-	$_SESSION['user_login'] = json_encode($user);
+$response = json_decode($users->registerUser($user['id'], $user['screen_name'], str_replace("_normal", "", $user['profile_image_url'])));
+if ($response->success == 0) {
+	session_destroy();
 }
 
 /* If HTTP response is 200 continue otherwise send to connect page to retry */
