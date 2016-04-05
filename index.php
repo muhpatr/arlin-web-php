@@ -15,28 +15,18 @@ require_once('classes/TwitterConfig.php');
 </head>
 <body>
 	<?php
-	if (empty($_SESSION['access_token']) || empty($_SESSION['access_token']['oauth_token']) || empty($_SESSION['access_token']['oauth_token_secret'])) {
+	if (empty($_SESSION['user_login'])) {
 		session_destroy();
 		?>
 		<a href="login.php">Sign In Via Twitter</a>
 		<?php
 	} else {
-		/* Get user access tokens out of the session. */
-		$access_token = $_SESSION['access_token'];
-
-		/* Create a TwitterOauth object with consumer/user tokens. */
-		$connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $access_token['oauth_token'], $access_token['oauth_token_secret']);
-
-		/* If method is set change API call made. Test is called by default. */
-		$content = $connection->get('account/verify_credentials');
-		$user = json_encode($content);
-		$user = json_decode($user, TRUE);
-		$avatar = str_replace("_normal", "", $user["profile_image_url"]);
+		$user = json_decode($_SESSION['user_login']);
 		?>
-		<h3>Hello, <?php echo $user['name']; ?>!</h3>
-		<p>Your username is: <b><?php echo $user['screen_name']; ?></b> (<a href="logout.php">Click here</a> to logout)</p>
+		<h3>Hello, <?php echo $user->user_id; ?>!</h3>
+		<p>Your username is: <b><?php echo $user->username; ?></b> (<a href="logout.php">Click here</a> to logout)</p>
 		<p>This is your profile picture:</p>
-		<img src="<?php echo $avatar; ?>"/>
+		<img src="<?php echo $user->avatar; ?>"/>
 		<?php
 	} 
 	?>
